@@ -1,0 +1,37 @@
+version: "3"
+
+services:
+  web:
+    build: 
+      # The context options basically tells where we 
+      # want all the files and folders to be pulled from. 
+      # But we could also do: somefolder/anotherfolder/theproject
+      context: .
+      dockerfile: Dockerfile.dev
+
+    ports:
+      - "3000:3000"
+    
+    volumes:
+      # The /app/node_modules tells docker to not MAP this folder with the one from our
+      # current working directory. It will just use the one it has.
+      - /app/node_modules
+
+      # .:/app 
+      # . point to the current directory 
+      # : Tell that we want to map the current directory to the one from docker
+      # /app tell which directory we want to reference when a change happens in the current directory!
+      - .:/app
+  
+  web-test:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    
+    volumes:
+      - /app/node_modules
+      - .:/app
+    
+    command: ["npm", "run", "test"]
+
+      
